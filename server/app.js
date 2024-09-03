@@ -6,10 +6,11 @@ const dotenv = require("dotenv");
 const passport = require("passport");
 const fileUpload = require("express-fileupload");
 const { Readable } = require("stream");
+const session = require('express-session');
 
 dotenv.config();
 const cors = require("cors");
-app.use(cors({ origin: ["http://localhost:3000"], credentials: true }));
+app.use(cors({ origin: ["http://localhost:3001"], credentials: true }));
 
 mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true });
 const connect = mongoose.connection;
@@ -21,6 +22,15 @@ app.use(cookieparser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(fileUpload());
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET, 
+    resave: false, 
+    saveUninitialized: false, 
+    cookie: { secure: false } 
+  })
+);
 
 let PORT = process.env.PORT || 3005;
 
